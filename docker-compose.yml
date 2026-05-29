@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: .
+    container_name: peoplesense-backend
+    env_file:
+      - .env
+    environment:
+      ENVIRONMENT: development
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/storage/peoplesense.db}
+      YOLO_MODEL_PATH: /app/yolov8n.pt
+    ports:
+      - "8000:8000"
+    volumes:
+      - peoplesense_storage:/app/storage
+    restart: unless-stopped
+
+  frontend:
+    image: node:20-alpine
+    container_name: peoplesense-frontend
+    working_dir: /web
+    environment:
+      VITE_API_TARGET: http://backend:8000
+    volumes:
+      - ./frontend:/web
+    command: sh -c "npm install --no-audit --no-fund --progress=false && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    profiles:
+      - dev
+
+volumes:
+  peoplesense_storage:

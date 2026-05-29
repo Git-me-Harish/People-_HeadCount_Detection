@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.local
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
+*.log
+
+# Storage / artifacts
+backend/storage/*
+!backend/storage/.gitkeep
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+
+# Coverage / test artifacts
+.coverage
+htmlcov/
