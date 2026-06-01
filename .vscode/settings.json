@@ -1,0 +1,20 @@
+{
+    "cSpell.words": [
+        "astype",
+        "crossentropy",
+        "dtype",
+        "fourcc",
+        "frombuffer",
+        "imdecode",
+        "imread",
+        "keras",
+        "layers",
+        "model_selection",
+        "relu",
+        "selectbox",
+        "Streamlit",
+        "tempfile",
+        "YOLO",
+        "yolov"
+    ]
+}

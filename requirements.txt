@@ -1,0 +1,6 @@
+# Streamlit-demo dependencies. See backend/requirements.txt for the API.
+streamlit>=1.30
+opencv-python-headless>=4.9
+numpy>=1.26
+Pillow>=10.2
+ultralytics>=8.1

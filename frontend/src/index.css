@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    /* Light mode tokens */
+    --bg-base:        #f5f6f8;
+    --bg-surface:     #ffffff;
+    --bg-elevated:    #ffffff;
+    --bg-subtle:      #f0f1f4;
+    --bg-muted:       #e8eaee;
+
+    --border-base:    #e2e5eb;
+    --border-subtle:  #eef0f3;
+
+    --text-primary:   #0d1117;
+    --text-secondary: #4a5568;
+    --text-muted:     #8492a6;
+    --text-inverse:   #ffffff;
+
+    --accent:         #00c2a8;
+    --accent-dim:     rgba(0, 194, 168, 0.12);
+    --accent-hover:   #00a892;
+
+    --warn:           #f59e0b;
+    --warn-dim:       rgba(245, 158, 11, 0.12);
+
+    --danger:         #ef4444;
+    --danger-dim:     rgba(239, 68, 68, 0.10);
+
+    --success:        #22c55e;
+    --success-dim:    rgba(34, 197, 94, 0.10);
+
+    --sidebar-w:      228px;
+    --sidebar-collapsed: 56px;
+  }
+
+  .ops {
+    color-scheme: dark;
+
+    /* Ops mode — deep slate, precision instrument */
+    --bg-base:        #0b0f14;
+    --bg-surface:     #111620;
+    --bg-elevated:    #161c28;
+    --bg-subtle:      #1a2233;
+    --bg-muted:       #212b3d;
+
+    --border-base:    #1e2a3d;
+    --border-subtle:  #192234;
+
+    --text-primary:   #e8edf5;
+    --text-secondary: #8a9bb5;
+    --text-muted:     #4a5c78;
+    --text-inverse:   #0b0f14;
+
+    --accent:         #00c2a8;
+    --accent-dim:     rgba(0, 194, 168, 0.15);
+    --accent-hover:   #00d4b8;
+
+    --warn:           #f59e0b;
+    --warn-dim:       rgba(245, 158, 11, 0.15);
+
+    --danger:         #f87171;
+    --danger-dim:     rgba(248, 113, 113, 0.12);
+
+    --success:        #34d399;
+    --success-dim:    rgba(52, 211, 153, 0.12);
+  }
+
+  * {
+    border-color: var(--border-base);
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Monospace for all numeric data */
+  .tabular-nums,
+  .font-mono {
+    font-family: 'DM Mono', 'SF Mono', 'Fira Code', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-base); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+  /* Smooth transitions on theme switch */
+  *, *::before, *::after {
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  /* But NOT transform or opacity — kills animations */
+  *[class*="animate-"],
+  *[class*="transition-"] {
+    transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+  }
+}
+
+@layer components {
+  /* Live pulse dot */
+  .live-dot {
+    @apply inline-block w-2 h-2 rounded-full bg-[var(--success)] animate-pulse;
+  }
+
+  /* Density status indicator */
+  .density-low    { color: var(--success); }
+  .density-medium { color: var(--warn); }
+  .density-high   { color: #f97316; }
+  .density-critical { color: var(--danger); }
+
+  /* Stat number — monospaced large */
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* Horizontal rule subtle */
+  .rule {
+    border-top: 1px solid var(--border-subtle);
+  }
+}
