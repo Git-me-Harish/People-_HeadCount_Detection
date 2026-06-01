@@ -2,8 +2,6 @@
 
 > Multi-tenant crowd intelligence SaaS — real-time head-count detection, predictive analytics, and public transparency for safer public spaces.
 
-[![CI](https://github.com/your-org/peoplesense/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/peoplesense/actions)
-
 ---
 
 ## Architecture
