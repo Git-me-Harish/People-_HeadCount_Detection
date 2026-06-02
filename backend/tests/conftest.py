@@ -115,3 +115,39 @@ def test_user(client: TestClient, db: _Session) -> _User:
     user = db.query(_User).filter(_User.email == email).first()
     assert user is not None
     return user
+
+@pytest.fixture
+def authenticated_user(client: TestClient, db: _Session):
+    """
+    Creates a single user and returns both:
+    - ORM User object
+    - Authorization headers
+
+    Ensures tests use the same authenticated user that owns the data.
+    """
+    email = f"user-{_uuid.uuid4().hex[:8]}@example.com"
+
+    resp = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": email,
+            "full_name": "Test User",
+            "password": "testpass123",
+            "organization_name": f"Org-{_uuid.uuid4().hex[:6]}",
+        },
+    )
+
+    assert resp.status_code == 201, resp.text
+
+    token = resp.json()["access_token"]
+
+    user = db.query(_User).filter(_User.email == email).first()
+
+    assert user is not None
+
+    return {
+        "user": user,
+        "headers": {
+            "Authorization": f"Bearer {token}"
+        },
+    }
