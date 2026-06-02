@@ -12,7 +12,7 @@ from ..db import get_db
 from ..deps import get_current_user
 from ..models import Job, JobStatus, User, UserRole
 from ..schemas.job import JobRead
-from ..workers.jobs import is_cancellable, request_cancel
+from ..workers.jobs import request_cancel
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 

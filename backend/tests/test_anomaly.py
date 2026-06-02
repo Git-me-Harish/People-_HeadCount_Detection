@@ -1,7 +1,6 @@
 """Tests for anomaly detection service."""
 from datetime import datetime, timedelta, timezone
 
-import pytest
 from sqlalchemy.orm import Session
 
 from app.models import DetectionRecord

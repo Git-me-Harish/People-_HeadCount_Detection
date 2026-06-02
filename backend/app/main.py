@@ -17,15 +17,21 @@ from slowapi.util import get_remote_address
 from . import __version__
 from .config import get_settings
 from .db import init_db
-from .routers import alerts, analytics, auth, cameras, detect, jobs, stream
 from .routers import (
+    alerts,
+    analytics,
     api_tokens,
     audit,
+    auth,
+    cameras,
+    detect,
     heatmaps,
+    jobs,
     notifications,
     plan,
     public,
     reports,
+    stream,
     templates,
 )
 from .scheduler import start_scheduler, stop_scheduler
@@ -95,7 +101,7 @@ def create_app() -> FastAPI:
         return response
 
     # meta routes
-    
+
     @app.get("/health", tags=["meta"])
     def health() -> dict:
         return {"status": "ok", "version": __version__, "environment": settings.environment}
@@ -116,7 +122,7 @@ def create_app() -> FastAPI:
             }
         )
 
-    # routers 
+    # routers
     prefix = settings.api_v1_prefix
 
     # Phase 1

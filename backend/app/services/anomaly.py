@@ -10,7 +10,6 @@ import logging
 import math
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..models import DetectionRecord

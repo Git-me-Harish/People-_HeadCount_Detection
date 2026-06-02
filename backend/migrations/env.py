@@ -1,7 +1,10 @@
 """Alembic environment — reads DATABASE_URL from settings."""
 from __future__ import annotations
 
+import os
+import sys
 from logging.config import fileConfig
+
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
@@ -9,11 +12,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Import models to populate metadata
-import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app.db import Base
-from app import models  # noqa: F401 — registers all ORM models
+from app import models  # noqa: E402,F401
+from app.db import Base  # noqa: E402
 
 target_metadata = Base.metadata
 

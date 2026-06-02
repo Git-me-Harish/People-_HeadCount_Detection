@@ -31,7 +31,8 @@ from ..services.alerts import evaluate_alerts
 from ..services.anomaly import check_anomaly
 from ..services.detector import get_detector
 from ..services.heatmap import update_heatmap
-from ..services.notifier import NotificationChannel, dispatch as notifier_dispatch
+from ..services.notifier import NotificationChannel
+from ..services.notifier import dispatch as notifier_dispatch
 from ..workers.jobs import run_video_job
 
 router = APIRouter(prefix="/detect", tags=["detect"])

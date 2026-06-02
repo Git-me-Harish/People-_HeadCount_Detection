@@ -6,14 +6,12 @@ Each delivery attempt is persisted as a Notification row.
 
 from __future__ import annotations
 
-import json
 import logging
 from datetime import datetime, timezone
 
 import httpx
 from sqlalchemy.orm import Session
 
-from ..config import get_settings
 from ..models import Notification, NotificationChannel, NotificationStatus
 
 logger = logging.getLogger(__name__)
@@ -54,7 +52,6 @@ def dispatch(
     extra_webhook_url: str | None = None,
 ) -> list[Notification]:
     """Create Notification rows and attempt delivery for each channel."""
-    settings = get_settings()
     created: list[Notification] = []
 
     for channel in channels:

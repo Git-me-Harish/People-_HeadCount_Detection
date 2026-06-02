@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..db import get_db
 from ..deps import get_current_user
-from ..models import Notification, NotificationChannel, NotificationStatus, User
+from ..models import Notification, NotificationChannel, User
 
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 

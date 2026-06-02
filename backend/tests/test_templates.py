@@ -1,5 +1,4 @@
 """Tests for industry templates endpoint."""
-import pytest
 from fastapi.testclient import TestClient
 
 
