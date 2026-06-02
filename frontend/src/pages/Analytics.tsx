@@ -3,9 +3,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
   Area,
   AreaChart,
   ResponsiveContainer,
@@ -13,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { api, AnalyticsSummary, TimeseriesPoint } from "../api/client";
+import { api, AnalyticsSummary, TimeSeriesPoint } from "../api/client";
 import { Card, PageHeader, Spinner, KpiCard, Select } from "../components/ui";
 import { Activity, TrendingUp, Zap, BarChart2 } from "lucide-react";
 
@@ -43,7 +40,7 @@ const ChartTooltip = ({ active, payload, label }: any) => {
 export default function Analytics() {
   const [days, setDays] = useState(7);
   const [bucket, setBucket] = useState(60);
-  const [series, setSeries] = useState<TimeseriesPoint[]>([]);
+  const [series, setSeries] = useState<TimeSeriesPoint[]>([]);
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -89,8 +86,6 @@ export default function Analytics() {
     count: p.count,
     peak: p.peak,
   }));
-
-  const densityBarColors = ["var(--success)", "var(--warn)", "#f97316", "var(--danger)"];
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-5">
@@ -251,15 +246,14 @@ export default function Analytics() {
                     dot={false}
                     name="avg"
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="peak"
-                    stroke="var(--warn)"
-                    strokeWidth={1.5}
-                    dot={false}
-                    name="peak"
-                    strokeDasharray="4 2"
-                  />
+                  <AreaChart>
+                    <YAxis
+                      tick={{ fontSize: 10, fill: "var(--text-muted)", fontFamily: "DM Mono" }}
+                      axisLine={false}
+                      tickLine={false}
+                      width={36}
+                    />
+                  </AreaChart>
                 </AreaChart>
               </ResponsiveContainer>
             )}

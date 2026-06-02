@@ -36,8 +36,6 @@ export const PLAN_TIERS = {
 } as const;
 
 export const ALERT_COOLDOWN_MINUTES = 5;
-export const WS_RECONNECT_DELAY_MS = 3_000;
-export const WS_MAX_RECONNECT_ATTEMPTS = 5;
 
 /** Density thresholds for colour coding (people per camera feed). */
 export const DENSITY_THRESHOLDS = {

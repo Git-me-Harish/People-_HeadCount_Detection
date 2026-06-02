@@ -113,9 +113,6 @@ export default function Notifications() {
                     <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
                       {n.title}
                     </p>
-                    {n.type && (
-                      <Badge color={TYPE_COLORS[n.type] ?? "gray"}>{n.type}</Badge>
-                    )}
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                     {n.body}

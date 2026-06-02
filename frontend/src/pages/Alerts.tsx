@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, Plus, Trash2, Webhook, Clock } from "lucide-react";
+import { AlertTriangle, Plus, Trash2, Clock } from "lucide-react";
 import { alertsApi, camerasApi } from "../api/client";
 import type { Alert as AlertModel, Camera } from "../types";
 import {
