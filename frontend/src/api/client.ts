@@ -23,6 +23,15 @@ import type {
   Alert,
 } from "../types";
 
+// Export DetectionResult type for image detection
+export interface DetectionResult {
+  person_count: number;
+  avg_confidence: number | null;
+  width: number;
+  height: number;
+  annotated_image_b64?: string;
+}
+
 // Instance:
 // Decode JWT payload without verifying signature (client-side only — verification happens server-side)
 function _jwtExp(token: string): number | null {

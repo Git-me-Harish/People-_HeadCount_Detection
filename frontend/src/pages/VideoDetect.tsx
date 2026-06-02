@@ -30,17 +30,21 @@ function StatBlock({ label, value }: { label: string; value: string | number }) 
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  queued:     "var(--text-muted)",
-  processing: "var(--warn)",
-  completed:  "var(--success)",
-  failed:     "var(--danger)",
+  idle:      "var(--text-muted)",
+  running:   "var(--warn)",
+  pending:   "var(--warn)",
+  completed: "var(--success)",
+  failed:    "var(--danger)",
+  cancelled: "var(--text-muted)",
 };
 
 const STATUS_BG: Record<string, string> = {
-  queued:     "var(--bg-subtle)",
-  processing: "var(--warn-dim)",
-  completed:  "var(--success-dim)",
-  failed:     "var(--danger-dim)",
+  idle:      "var(--bg-subtle)",
+  running:   "var(--warn-dim)",
+  pending:   "var(--warn-dim)",
+  completed: "var(--success-dim)",
+  failed:    "var(--danger-dim)",
+  cancelled: "var(--bg-subtle)",
 };
 
 export default function VideoDetect() {
@@ -203,7 +207,7 @@ export default function VideoDetect() {
 
           <div className="p-5 space-y-5">
             {/* Progress bar */}
-            {(status === "processing" || status === "queued") && (
+            {(status === "running" || status === "pending") && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-xs" style={{ color: "var(--text-muted)" }}>Processing frames...</p>
@@ -219,7 +223,7 @@ export default function VideoDetect() {
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${progressPct}%`,
-                      backgroundColor: status === "processing" ? "var(--accent)" : "var(--text-muted)",
+                      backgroundColor: status === "running" ? "var(--accent)" : "var(--text-muted)",
                     }}
                   />
                 </div>
