@@ -17,6 +17,7 @@ pydantic-settings>=2.4.0,<3.0.0
 # Auth
 python-jose[cryptography]>=3.3.0
 passlib[bcrypt]>=1.7.4
+bcrypt==4.0.1
 
 # HTTP client (webhook dispatch, Slack, Teams)
 httpx>=0.27.0
