@@ -1,20 +1,18 @@
-import { Activity, AlertTriangle, Camera, TrendingUp, Users, Zap, Radio } from "lucide-react";
+import { Activity, AlertTriangle, TrendingUp, Users, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
   CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
   Area,
   AreaChart,
+  ResponsiveContainer,
 } from "recharts";
 import { analyticsApi, alertsApi } from "../api/client";
-import { KpiCard, Card, PageHeader, Spinner, Badge, DensityDot, StatusPill, DataRow } from "../components/ui";
-import { ROUTES, CHART_COLORS } from "../constants";
+import { KpiCard, Card, PageHeader, Spinner, Badge, DensityDot, StatusPill } from "../components/ui";
+import { ROUTES } from "../constants";
 import { useAsync } from "../hooks";
 import { format } from "date-fns";
 
@@ -43,7 +41,7 @@ const ChartTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function Dashboard() {
-  const { t } = useTranslation();
+  const { t: _t } = useTranslation();
 
   const { data: summary, loading: sumLoading } = useAsync(() => analyticsApi.summary(7));
   const { data: timeseries, loading: tsLoading } = useAsync(() => analyticsApi.timeseries(7, 60));
@@ -194,15 +192,6 @@ export default function Dashboard() {
                     fill="url(#avgGrad)"
                     dot={false}
                     name="Average"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="peak"
-                    stroke="var(--warn)"
-                    strokeWidth={1.5}
-                    dot={false}
-                    name="Peak"
-                    strokeDasharray="4 2"
                   />
                 </AreaChart>
               </ResponsiveContainer>
