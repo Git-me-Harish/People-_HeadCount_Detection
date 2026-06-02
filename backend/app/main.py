@@ -9,6 +9,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.util import get_remote_address
 
 from . import __version__
 from .config import get_settings
@@ -24,9 +28,14 @@ from .routers import (
     reports,
     templates,
 )
+from .scheduler import start_scheduler, stop_scheduler
+from .services.stream_manager import CameraStreamManager
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s | %(message)s")
 logger = logging.getLogger(__name__)
+
+# App-wide rate limiter — shared state so all routers can reference it
+_limiter = Limiter(key_func=get_remote_address)
 
 
 @asynccontextmanager
@@ -34,8 +43,14 @@ async def lifespan(_: FastAPI):
     settings = get_settings()
     settings.ensure_dirs()
     init_db()
+    start_scheduler()
+    # Start RTSP puller threads for all cameras that have a stream_url
+    CameraStreamManager.get().start_all_active_cameras()
     logger.info("PeopleSense API %s started (env=%s)", __version__, settings.environment)
     yield
+    # Graceful shutdown — stop all camera threads before the process exits
+    CameraStreamManager.get().stop_all(timeout_s=5.0)
+    stop_scheduler()
     logger.info("PeopleSense API shutting down")
 
 
@@ -53,6 +68,12 @@ def create_app() -> FastAPI:
         redoc_url="/redoc",
         openapi_url="/openapi.json",
     )
+
+    # Rate limiting: SlowAPIMiddleware reads the limiter from app.state.limiter
+    # SlowAPIMiddleware reads the limiter from app.state.limiter
+    app.state.limiter = _limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_middleware(SlowAPIMiddleware)
 
     app.add_middleware(
         CORSMiddleware,
@@ -73,8 +94,8 @@ def create_app() -> FastAPI:
             logger.warning("Slow request: %s %s → %dms", request.method, request.url.path, elapsed_ms)
         return response
 
-    # --------------- meta routes ---------------
-
+    # meta routes
+    
     @app.get("/health", tags=["meta"])
     def health() -> dict:
         return {"status": "ok", "version": __version__, "environment": settings.environment}
@@ -95,7 +116,7 @@ def create_app() -> FastAPI:
             }
         )
 
-    # --------------- routers ---------------
+    # routers 
     prefix = settings.api_v1_prefix
 
     # Phase 1

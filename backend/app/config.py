@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24  # 1 day
 
     database_url: str = Field(
-        default=f"sqlite:///{(BACKEND_DIR / 'storage' / 'peoplesense.db').as_posix()}",
+        default=f"sqlite:///{BACKEND_DIR / 'storage' / 'peoplesense.db'}",
         description="SQLAlchemy DB URL. Defaults to local SQLite.",
     )
 
@@ -75,6 +75,25 @@ class Settings(BaseSettings):
 
     # Data retention
     default_retention_days: int = 30
+
+    # RTSP / camera stream puller
+    stream_sample_interval_s: float = Field(
+        default=2.0,
+        description="Seconds between YOLO inference calls per camera stream. "
+                    "Lower = more CPU. 2s gives 0.5fps inference which is enough for crowd counting.",
+    )
+    stream_persist_every_n_samples: int = Field(
+        default=5,
+        description="Write a DetectionRecord to DB every N successful inference calls per camera.",
+    )
+    stream_reconnect_max_backoff_s: float = Field(
+        default=60.0,
+        description="Max seconds to wait before retrying a failed RTSP connection.",
+    )
+    stream_max_consecutive_errors: int = Field(
+        default=10,
+        description="Stop the stream thread after this many consecutive frame-read errors.",
+    )
 
     def ensure_dirs(self) -> None:
         for directory in (self.storage_dir, self.upload_dir, self.output_dir):

@@ -1,31 +1,37 @@
-# --- Web framework ---
+# Web framework
 fastapi>=0.115.0,<1.0.0
 uvicorn[standard]>=0.30.0,<1.0.0
 python-multipart>=0.0.9
 
-# --- Database ---
+# Rate limiting
+slowapi>=0.1.9
+
+# Background scheduler 
+apscheduler>=3.10.0,<4.0.0
+
+#  Database 
 sqlalchemy>=2.0.0,<3.0.0
 pydantic>=2.8.0,<3.0.0
 pydantic-settings>=2.4.0,<3.0.0
 
-# --- Auth ---
+# Auth
 python-jose[cryptography]>=3.3.0
 passlib[bcrypt]>=1.7.4
 
-# --- HTTP client (webhook dispatch, Slack, Teams) ---
+# HTTP client (webhook dispatch, Slack, Teams)
 httpx>=0.27.0
 
-# --- Vision / ML ---
+# Vision / ML
 ultralytics>=8.2.0
 opencv-python-headless>=4.10.0
 Pillow>=10.4.0
 numpy>=1.26.0
 
-# --- PDF generation ---
+# PDF generation
 reportlab>=4.2.0
 
-# --- Migrations ---
+# Migrations
 alembic>=1.13.0
 
-# --- Utilities ---
+# Utilities
 python-dotenv>=1.0.0

@@ -1,6 +1,9 @@
-// Domain types — single source of truth for all API entities. Mirrors backend Pydantic schemas:
+/**
+ * Domain types — single source of truth for all API entities.
+ * Mirrors backend Pydantic schemas.
+ */
 
-// Auth:
+// ── Auth ────────────────────────────────────────────────────────────────────
 
 export interface User {
   id: number;
@@ -17,7 +20,7 @@ export interface Token {
   token_type?: string;
 }
 
-// Organisation:
+// ── Organisation ────────────────────────────────────────────────────────────
 
 export interface Organization {
   id: number;
@@ -26,8 +29,28 @@ export interface Organization {
   created_at: string;
 }
 
-// Camera:
+// ── Camera ──────────────────────────────────────────────────────────────────
 
+export type StreamState =
+  | "idle"
+  | "starting"
+  | "running"
+  | "reconnecting"
+  | "stopping"
+  | "stopped"
+  | "error";
+
+export interface CameraStreamStatus {
+  camera_id: number;
+  state: StreamState;
+  last_frame_at: string | null;
+  last_person_count: number;
+  frames_processed: number;
+  consecutive_errors: number;
+  reconnect_attempts: number;
+  error_message: string | null;
+  started_at: string | null;
+}
 export interface Camera {
   id: number;
   name: string;
@@ -41,7 +64,7 @@ export interface Camera {
 
 export type CameraCreate = Pick<Camera, "name" | "location" | "stream_url" | "max_capacity">;
 
-// Detection:
+// ── Detection ───────────────────────────────────────────────────────────────
 
 export interface DetectionRecord {
   id: number;
@@ -53,7 +76,7 @@ export interface DetectionRecord {
   created_at: string;
 }
 
-// Alert:
+// ── Alert ───────────────────────────────────────────────────────────────────
 
 export interface Alert {
   id: number;
@@ -70,7 +93,7 @@ export interface Alert {
 
 export type AlertCreate = Pick<Alert, "name" | "threshold" | "cooldown_minutes" | "camera_id" | "webhook_url">;
 
-// Analytics:
+// ── Analytics ───────────────────────────────────────────────────────────────
 
 export interface AnalyticsSummary {
   window_days: number;
@@ -88,7 +111,7 @@ export interface TimeSeriesPoint {
   samples: number;
 }
 
-// Template:
+// ── Template ─────────────────────────────────────────────────────────────────
 
 export interface IndustryTemplate {
   id: number;
@@ -100,7 +123,7 @@ export interface IndustryTemplate {
   default_alerts: Array<{ name: string; threshold: number }>;
 }
 
-// Notification:
+// ── Notification ─────────────────────────────────────────────────────────────
 
 export interface Notification {
   id: number;
@@ -115,7 +138,7 @@ export interface Notification {
   read_at: string | null;
 }
 
-// API Token:
+// ── API Token ────────────────────────────────────────────────────────────────
 
 export interface APIToken {
   id: number;
@@ -129,7 +152,7 @@ export interface APIToken {
   full_token?: string; // only present on creation
 }
 
-// Audit:
+// ── Audit ────────────────────────────────────────────────────────────────────
 
 export interface AuditLogEntry {
   id: number;
@@ -141,7 +164,7 @@ export interface AuditLogEntry {
   created_at: string;
 }
 
-// Plan:
+// ── Plan ─────────────────────────────────────────────────────────────────────
 
 export interface Plan {
   tier: string;
@@ -169,7 +192,7 @@ export interface PlanAndUsage {
   usage: UsageCounter;
 }
 
-// Heatmap:
+// ── Heatmap ──────────────────────────────────────────────────────────────────
 
 export interface HeatmapSnapshot {
   camera_id: number;
@@ -182,7 +205,7 @@ export interface HeatmapSnapshot {
   peak_count: number;
 }
 
-// Public Page:
+// ── Public Page ───────────────────────────────────────────────────────────────
 
 export interface PublicPageConfig {
   slug: string;
@@ -212,12 +235,12 @@ export interface CameraLiveStatus {
   status: "live" | "idle" | "offline";
 }
 
-// Job:
+// ── Job ───────────────────────────────────────────────────────────────────────
 
 export interface Job {
   id: number;
   job_type: string;
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
   progress: number;
   summary_json: string | null;
   error_message: string | null;
@@ -225,7 +248,7 @@ export interface Job {
   completed_at: string | null;
 }
 
-// Live Stream:
+// ── Live Stream ───────────────────────────────────────────────────────────────
 
 export interface StreamFrame {
   person_count: number;
@@ -238,7 +261,7 @@ export interface StreamFrame {
   annotated_image_b64: string | null;
 }
 
-// API Helpers:
+// ── API Helpers ───────────────────────────────────────────────────────────────
 
 export interface PaginatedResponse<T> {
   items: T[];

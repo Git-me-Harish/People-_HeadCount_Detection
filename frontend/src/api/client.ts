@@ -1,4 +1,4 @@
-/* Axios API client — single instance, typed endpoint helpers.*/
+// Axios API client — single instance, typed endpoint helpers.
 
 import axios, { type AxiosInstance } from "axios";
 import { API_BASE_URL } from "../constants";
@@ -9,6 +9,7 @@ import type {
   AuditLogEntry,
   Camera,
   CameraCreate,
+  CameraStreamStatus,
   DetectionRecord,
   HeatmapSnapshot,
   IndustryTemplate,
@@ -23,7 +24,8 @@ import type {
   Alert,
 } from "../types";
 
-// Instance:
+// ── Instance ─────────────────────────────────────────────────────────────────
+
 // Decode JWT payload without verifying signature (client-side only — verification happens server-side)
 function _jwtExp(token: string): number | null {
   try {
@@ -107,7 +109,7 @@ const createAxiosInstance = (): AxiosInstance => {
 
 export const api = createAxiosInstance();
 
-// Auth:
+// ── Auth ──────────────────────────────────────────────────────────────────────
 
 export const authApi = {
   login: (email: string, password: string) =>
@@ -117,18 +119,28 @@ export const authApi = {
   me: () => api.get<User>("/auth/me"),
   // Explicitly refresh token on demand (e.g. on app focus/wake)
   refresh: () => api.post<Token>("/auth/refresh"),
+  invite: (payload: { email: string; full_name: string; role: "admin" | "member" | "viewer" }) =>
+    api.post<{ user_id: number; email: string; role: string; email_sent: boolean; temp_password?: string }>(
+      "/auth/invite",
+      payload
+    ),
 };
 
-// Cameras:
+// ── Cameras ───────────────────────────────────────────────────────────────────
 
 export const camerasApi = {
   list: () => api.get<Camera[]>("/cameras"),
+  get: (id: number) => api.get<Camera>(`/cameras/${id}`),
   create: (data: CameraCreate) => api.post<Camera>("/cameras", data),
   update: (id: number, data: Partial<CameraCreate>) => api.patch<Camera>(`/cameras/${id}`, data),
   delete: (id: number) => api.delete(`/cameras/${id}`),
+  // Stream management
+  getStreamStatus: (id: number) => api.get<CameraStreamStatus>(`/cameras/${id}/stream/status`),
+  startStream: (id: number) => api.post<{ camera_id: number; action: string }>(`/cameras/${id}/stream/start`),
+  stopStream: (id: number) => api.post<{ camera_id: number; action: string; was_running: boolean }>(`/cameras/${id}/stream/stop`),
 };
 
-// Analytics:
+// ── Analytics ─────────────────────────────────────────────────────────────────
 
 export const analyticsApi = {
   summary: (days = 7) => api.get<AnalyticsSummary>("/analytics/summary", { params: { days } }),
@@ -137,7 +149,7 @@ export const analyticsApi = {
   records: (limit = 50) => api.get<DetectionRecord[]>("/analytics/records", { params: { limit } }),
 };
 
-// Alerts:
+// ── Alerts ────────────────────────────────────────────────────────────────────
 
 export const alertsApi = {
   list: () => api.get<Alert[]>("/alerts"),
@@ -147,7 +159,7 @@ export const alertsApi = {
   delete: (id: number) => api.delete(`/alerts/${id}`),
 };
 
-// Templates:
+// ── Templates ─────────────────────────────────────────────────────────────────
 
 export const templatesApi = {
   list: () => api.get<IndustryTemplate[]>("/templates"),
@@ -157,7 +169,7 @@ export const templatesApi = {
     ),
 };
 
-// Notifications:
+// ── Notifications ─────────────────────────────────────────────────────────────
 
 export const notificationsApi = {
   list: (unreadOnly = false) =>
@@ -169,7 +181,7 @@ export const notificationsApi = {
   delete: (id: number) => api.delete(`/notifications/${id}`),
 };
 
-// API Tokens:
+// ── API Tokens ────────────────────────────────────────────────────────────────
 
 export const apiTokensApi = {
   list: () => api.get<APIToken[]>("/api-tokens"),
@@ -178,14 +190,14 @@ export const apiTokensApi = {
   revoke: (id: number) => api.delete(`/api-tokens/${id}`),
 };
 
-// Audit:
+// ── Audit ─────────────────────────────────────────────────────────────────────
 
 export const auditApi = {
   list: (params?: { limit?: number; resource_type?: string }) =>
     api.get<AuditLogEntry[]>("/audit", { params }),
 };
 
-// Reports:
+// ── Reports ───────────────────────────────────────────────────────────────────
 
 export class ReportUnavailableError extends Error {
   constructor(detail: string) {
@@ -226,7 +238,7 @@ export const reportsApi = {
   },
 };
 
-// Public Page:
+// ── Public Page ───────────────────────────────────────────────────────────────
 
 export const publicPageApi = {
   create: (data: Omit<PublicPageConfig, "is_active">) =>
@@ -237,7 +249,7 @@ export const publicPageApi = {
   getPublic: (slug: string) => api.get<PublicStatus>(`/public/${slug}`),
 };
 
-// Heatmaps:
+// ── Heatmaps ──────────────────────────────────────────────────────────────────
 
 export const heatmapsApi = {
   latest: (cameraId: number) => api.get<HeatmapSnapshot>(`/heatmaps/camera/${cameraId}/latest`),
@@ -245,15 +257,33 @@ export const heatmapsApi = {
     api.get<HeatmapSnapshot[]>(`/heatmaps/camera/${cameraId}/history`, { params: { hours } }),
 };
 
-// Plan:
+// ── Plan ──────────────────────────────────────────────────────────────────────
 
 export const planApi = {
   get: () => api.get<PlanAndUsage>("/plan"),
+  getUpgradeOptions: () => api.get<{
+    current_tier: string;
+    available_upgrades: Array<{
+      tier: string;
+      display_name: string;
+      price_usd_monthly: number | null;
+      cameras: number;
+      alerts: number;
+      highlights: string[];
+    }>;
+  }>("/plan/upgrade-options"),
+  upgrade: (target_tier: string) => api.post<{
+    success: boolean;
+    previous_tier: string;
+    new_tier: string;
+    message: string;
+  }>("/plan/upgrade", { target_tier }),
 };
 
-// Jobs:
+// ── Jobs ──────────────────────────────────────────────────────────────────────
 
 export const jobsApi = {
   list: () => api.get<Job[]>("/jobs"),
   get: (id: number) => api.get<Job>(`/jobs/${id}`),
+  cancel: (id: number) => api.delete<{ job_id: number; status: string; method: string; note?: string }>(`/jobs/${id}`),
 };

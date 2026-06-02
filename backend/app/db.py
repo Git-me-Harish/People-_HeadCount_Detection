@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
@@ -17,9 +18,19 @@ class Base(DeclarativeBase):
 def _make_engine():
     settings = get_settings()
     connect_args: dict = {}
-    if settings.database_url.startswith("sqlite"):
+    db_url = settings.database_url
+
+    if db_url.startswith("sqlite"):
         connect_args["check_same_thread"] = False
-    return create_engine(settings.database_url, connect_args=connect_args, future=True)
+        # Extract the file path from sqlite:///... and ensure the parent dir exists.
+        # as_posix() produces forward-slash paths that sqlite3 on Windows can't open
+        # when the directory doesn't exist yet. We resolve via pathlib and mkdir first.
+        if db_url.startswith("sqlite:///"):
+            db_path_str = db_url[len("sqlite:///"):]
+            db_path = Path(db_path_str)
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    return create_engine(db_url, connect_args=connect_args, future=True)
 
 
 engine = _make_engine()
