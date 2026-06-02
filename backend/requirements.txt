@@ -35,3 +35,6 @@ alembic>=1.13.0
 
 # Utilities
 python-dotenv>=1.0.0
+
+#Email
+email-validator
