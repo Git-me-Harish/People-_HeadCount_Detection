@@ -44,3 +44,4 @@ def test_mark_all_read(client: TestClient, auth_headers: dict, db: Session, test
     # confirm count is now 0
     count_resp = client.get("/api/v1/notifications/count-unread", headers=auth_headers)
     assert count_resp.json()["unread_count"] == 0
+    
