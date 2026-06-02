@@ -24,8 +24,14 @@ import type {
   Alert,
 } from "../types";
 
-// Export types needed by other files
-export type { AnalyticsSummary, TimeSeriesPoint, Camera, Job, DetectionRecord };
+// Re-export types for consumers
+export type {
+  AnalyticsSummary,
+  TimeSeriesPoint,
+  Camera,
+  Job,
+  DetectionRecord,
+};
 
 // ── Instance ───────────────────────────────────────────────────────────[...]
 
@@ -143,7 +149,7 @@ export const camerasApi = {
   stopStream: (id: number) => api.post<{ camera_id: number; action: string; was_running: boolean }>(`/cameras/${id}/stream/stop`),
 };
 
-// ── Analytics ──────────────────────────────────────────────────────────[...]
+// ── Analytics ──────────────────────────────────────────────────────────[[...]
 
 export const analyticsApi = {
   summary: (days = 7) => api.get<AnalyticsSummary>("/analytics/summary", { params: { days } }),
@@ -152,7 +158,7 @@ export const analyticsApi = {
   records: (limit = 50) => api.get<DetectionRecord[]>("/analytics/records", { params: { limit } }),
 };
 
-// ── Alerts ───────────────────────────────────────────────────────────[...]
+// ── Alerts ───────────────────────────────────────────────────────────[[...]
 
 export const alertsApi = {
   list: () => api.get<Alert[]>("/alerts"),
@@ -162,7 +168,7 @@ export const alertsApi = {
   delete: (id: number) => api.delete(`/alerts/${id}`),
 };
 
-// ── Templates ──────────────────────────────────────────────────────────[...]
+// ── Templates ──────────────────────────────────────────────────────────[[...]
 
 export const templatesApi = {
   list: () => api.get<IndustryTemplate[]>("/templates"),
@@ -193,7 +199,7 @@ export const apiTokensApi = {
   revoke: (id: number) => api.delete(`/api-tokens/${id}`),
 };
 
-// ── Audit ───────────────────────────────────────────────────────────[...]
+// ── Audit ───────────────────────────────────────────────────────────[.[...]
 
 export const auditApi = {
   list: (params?: { limit?: number; resource_type?: string }) =>
@@ -219,7 +225,7 @@ export const reportsApi = {
     // When reportlab is missing the backend returns 503 with a JSON body.
     // Axios sees responseType=blob and delivers a Blob — not an AxiosError — so
     // the caller's catch block never fires. Inspect content-type to detect this.
-    const contentType: string = (response.headers["content-type"] as string) ?? "";
+    const contentType: string = String(response.headers["content-type"] ?? "");
     if (!contentType.includes("application/pdf")) {
       const text = await (response.data as Blob).text();
       let detail = "PDF generation unavailable — reportlab not installed on the backend.";
@@ -241,7 +247,7 @@ export const reportsApi = {
   },
 };
 
-// ── Public Page ─────────────────────────────────────────────────────────[...]
+// ── Public Page ─────────────────────────────────────────────────────────[.[...]
 
 export const publicPageApi = {
   create: (data: Omit<PublicPageConfig, "is_active">) =>
@@ -252,7 +258,7 @@ export const publicPageApi = {
   getPublic: (slug: string) => api.get<PublicStatus>(`/public/${slug}`),
 };
 
-// ── Heatmaps ──────────────────────────────────────────────────────────[...]
+// ── Heatmaps ──────────────────────────────────────────────────────────[.[...]
 
 export const heatmapsApi = {
   latest: (cameraId: number) => api.get<HeatmapSnapshot>(`/heatmaps/camera/${cameraId}/latest`),
