@@ -98,4 +98,3 @@ def test_mark_all_read(
 
     assert count_resp.status_code == 200
     assert count_resp.json()["unread_count"] == 0
-    
