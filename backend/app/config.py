@@ -80,7 +80,7 @@ class Settings(BaseSettings):
     stream_sample_interval_s: float = Field(
         default=2.0,
         description="Seconds between YOLO inference calls per camera stream. "
-                    "Lower = more CPU. 2s gives 0.5fps inference which is enough for crowd counting.",
+        "Lower = more CPU. 2s gives 0.5fps inference which is enough for crowd counting.",
     )
     stream_persist_every_n_samples: int = Field(
         default=5,

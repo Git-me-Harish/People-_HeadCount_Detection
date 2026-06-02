@@ -34,17 +34,13 @@ def create_alert(
 ) -> Alert:
     # Plan limit enforcement
     usage = (
-        db.query(UsageCounter)
-        .filter(UsageCounter.organization_id == user.organization_id)
-        .first()
+        db.query(UsageCounter).filter(UsageCounter.organization_id == user.organization_id).first()
     )
     if usage is not None:
         plan = db.query(Plan).filter(Plan.tier == usage.plan_tier).first()
         if plan is not None:
             current_count = (
-                db.query(Alert)
-                .filter(Alert.organization_id == user.organization_id)
-                .count()
+                db.query(Alert).filter(Alert.organization_id == user.organization_id).count()
             )
             if current_count >= plan.max_alerts:
                 raise HTTPException(

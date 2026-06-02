@@ -117,5 +117,7 @@ def download_artifact(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artifact not ready")
     path = Path(job.output_path)
     if not path.exists():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artifact missing on disk")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Artifact missing on disk"
+        )
     return FileResponse(path, media_type="video/mp4", filename=path.name)

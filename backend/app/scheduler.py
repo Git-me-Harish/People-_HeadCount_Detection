@@ -37,17 +37,13 @@ def purge_old_detection_records() -> None:
             return
 
         # Cache plan rows to avoid N+1
-        plans: dict[str, Plan] = {
-            p.tier: p for p in db.query(Plan).all()
-        }
+        plans: dict[str, Plan] = {p.tier: p for p in db.query(Plan).all()}
 
         now = datetime.now(timezone.utc)
         for counter in counters:
             plan = plans.get(counter.plan_tier)
             retention_days = (
-                plan.retention_days
-                if plan is not None
-                else settings.default_retention_days
+                plan.retention_days if plan is not None else settings.default_retention_days
             )
             cutoff = now - timedelta(days=retention_days)
 

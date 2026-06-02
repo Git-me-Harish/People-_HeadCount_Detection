@@ -101,7 +101,7 @@ def get_plan(
 
 _UPGRADEABLE_TIERS: dict[str, list[str]] = {
     "free": ["pro", "enterprise"],
-    "pro":  ["enterprise"],
+    "pro": ["enterprise"],
 }
 
 # Maps tier → friendly display details used by the frontend upgrade modal.
@@ -112,14 +112,27 @@ _TIER_DISPLAY = {
         "price_usd_monthly": 2900,  # cents
         "cameras": 25,
         "alerts": 50,
-        "highlights": ["PDF & CSV exports", "Public status page", "Slack / Teams alerts", "90-day retention", "5 API tokens"],
+        "highlights": [
+            "PDF & CSV exports",
+            "Public status page",
+            "Slack / Teams alerts",
+            "90-day retention",
+            "5 API tokens",
+        ],
     },
     "enterprise": {
         "display_name": "Enterprise",
         "price_usd_monthly": None,  # custom / contact sales
         "cameras": -1,
         "alerts": -1,
-        "highlights": ["Unlimited cameras", "Dedicated infrastructure", "SLA support", "SSO / SAML", "Custom retention", "On-premise"],
+        "highlights": [
+            "Unlimited cameras",
+            "Dedicated infrastructure",
+            "SLA support",
+            "SSO / SAML",
+            "Custom retention",
+            "On-premise",
+        ],
     },
 }
 
@@ -203,7 +216,7 @@ def upgrade_plan(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Cannot upgrade from '{usage.plan_tier}' to '{target}'. "
-                   f"Allowed: {allowed or 'none (already at highest tier)'}",
+            f"Allowed: {allowed or 'none (already at highest tier)'}",
         )
 
     previous = usage.plan_tier

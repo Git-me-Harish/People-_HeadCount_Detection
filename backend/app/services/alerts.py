@@ -59,10 +59,8 @@ def evaluate_alerts(
 
         # In-app + channel notifications via notifier service
         title = f"Alert: {alert.name}"
-        body = (
-            f"Threshold {alert.threshold} exceeded — "
-            f"current count is {person_count}"
-            + (f" (camera {camera_id})" if camera_id else "")
+        body = f"Threshold {alert.threshold} exceeded — " f"current count is {person_count}" + (
+            f" (camera {camera_id})" if camera_id else ""
         )
         channels: list[NotificationChannel] = [NotificationChannel.inbox]
         notifier_dispatch(

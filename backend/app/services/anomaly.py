@@ -65,11 +65,7 @@ def check_anomaly(
     records = query.all()
 
     # Filter to same hour-of-day for time-of-day-aware baseline
-    same_hour_counts = [
-        float(r.person_count)
-        for r in records
-        if r.created_at.hour == current_hour
-    ]
+    same_hour_counts = [float(r.person_count) for r in records if r.created_at.hour == current_hour]
 
     if len(same_hour_counts) < 5:
         # Insufficient baseline → cannot determine anomaly

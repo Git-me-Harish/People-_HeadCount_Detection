@@ -1,4 +1,5 @@
 """Tests for API token CRUD."""
+
 from fastapi.testclient import TestClient
 
 

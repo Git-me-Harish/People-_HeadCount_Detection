@@ -71,6 +71,7 @@ def auth_client(client: TestClient) -> TestClient:
     client.headers.update({"Authorization": f"Bearer {token}"})
     return client
 
+
 @pytest.fixture
 def db() -> Iterator[_Session]:
     session = _SessionLocal()

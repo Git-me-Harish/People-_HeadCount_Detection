@@ -191,11 +191,11 @@ def invite_team_member(
         source_id=new_user.id,
     )
     email_sent = any(
-        n.channel == NotificationChannel.email and n.status.value == "sent"
-        for n in notifications
+        n.channel == NotificationChannel.email and n.status.value == "sent" for n in notifications
     )
 
     from ..config import get_settings  # local to avoid circular at module level
+
     settings = get_settings()
     expose_temp = settings.environment != "production"
 

@@ -17,6 +17,7 @@ router = APIRouter(prefix="/cameras", tags=["cameras"])
 
 # Read-only schema for stream status responses:
 
+
 class StreamStatusRead(BaseModel):
     camera_id: int
     state: StreamState
@@ -64,9 +65,7 @@ def create_camera(
 ) -> Camera:
     # Plan limit enforcement
     usage = (
-        db.query(UsageCounter)
-        .filter(UsageCounter.organization_id == user.organization_id)
-        .first()
+        db.query(UsageCounter).filter(UsageCounter.organization_id == user.organization_id).first()
     )
     if usage is not None:
         plan = db.query(Plan).filter(Plan.tier == usage.plan_tier).first()
@@ -154,6 +153,7 @@ def delete_camera(
 
 # ── Stream management endpoints ───────────────────────────────────────────────
 
+
 @router.get("/{camera_id}/stream/status", response_model=StreamStatusRead)
 def get_stream_status(
     camera_id: int,
@@ -197,7 +197,9 @@ def start_stream(
     if cam is None or cam.organization_id != user.organization_id:
         raise HTTPException(status_code=404, detail="Camera not found")
     if not cam.stream_url:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Camera has no stream_url configured")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Camera has no stream_url configured"
+        )
     if not cam.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Camera is not active")
 

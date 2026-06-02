@@ -53,14 +53,15 @@ logger = logging.getLogger(__name__)
 
 # ── Thread state ──────────────────────────────────────────────────────────────
 
+
 class StreamState(str, Enum):
-    idle      = "idle"
-    starting  = "starting"
-    running   = "running"
+    idle = "idle"
+    starting = "starting"
+    running = "running"
     reconnecting = "reconnecting"
-    stopping  = "stopping"
-    stopped   = "stopped"
-    error     = "error"
+    stopping = "stopping"
+    stopped = "stopped"
+    error = "error"
 
 
 @dataclass
@@ -77,6 +78,7 @@ class StreamStatus:
 
 
 # ── Per-camera worker thread ──────────────────────────────────────────────────
+
 
 def _stream_worker(
     camera_id: int,
@@ -100,20 +102,20 @@ def _stream_worker(
     from ..services.heatmap import update_heatmap
     from ..services.notifier import dispatch as notifier_dispatch
 
-    settings   = get_settings()
-    detector   = get_detector()
-    sample_interval   = settings.stream_sample_interval_s
-    persist_every     = settings.stream_persist_every_n_samples
-    max_backoff       = settings.stream_reconnect_max_backoff_s
-    max_errors        = settings.stream_max_consecutive_errors
+    settings = get_settings()
+    detector = get_detector()
+    sample_interval = settings.stream_sample_interval_s
+    persist_every = settings.stream_persist_every_n_samples
+    max_backoff = settings.stream_reconnect_max_backoff_s
+    max_errors = settings.stream_max_consecutive_errors
 
     # Local imports so cv2 absence doesn't crash the whole app on import
     try:
         import cv2  # type: ignore
     except ImportError:
         logger.error(
-            "Camera %s: cv2 (opencv-python-headless) not importable — "
-            "cannot start RTSP puller.", camera_id
+            "Camera %s: cv2 (opencv-python-headless) not importable — " "cannot start RTSP puller.",
+            camera_id,
         )
         status.state = StreamState.error
         status.error_message = "cv2 not available"
@@ -121,14 +123,16 @@ def _stream_worker(
 
     status.state = StreamState.starting
     status.started_at = datetime.now(timezone.utc)
-    backoff_s = 2.0        # initial reconnect wait
-    sample_count = 0       # samples since last DB write
+    backoff_s = 2.0  # initial reconnect wait
+    sample_count = 0  # samples since last DB write
 
     logger.info("Camera %s: stream thread started (%s)", camera_id, stream_url)
 
     while not stop_event.is_set():
         # ── Open capture ──────────────────────────────────────────────────────
-        status.state = StreamState.reconnecting if status.reconnect_attempts > 0 else StreamState.starting
+        status.state = (
+            StreamState.reconnecting if status.reconnect_attempts > 0 else StreamState.starting
+        )
         cap = cv2.VideoCapture(stream_url)
 
         if not cap.isOpened():
@@ -137,12 +141,15 @@ def _stream_worker(
             status.error_message = f"cv2.VideoCapture could not open: {stream_url}"
             logger.warning(
                 "Camera %s: could not open stream (attempt %d). Retrying in %.1fs",
-                camera_id, status.reconnect_attempts, backoff_s,
+                camera_id,
+                status.reconnect_attempts,
+                backoff_s,
             )
             if status.consecutive_errors >= max_errors:
                 logger.error(
                     "Camera %s: %d consecutive failures — giving up.",
-                    camera_id, max_errors,
+                    camera_id,
+                    max_errors,
                 )
                 status.state = StreamState.error
                 return
@@ -166,12 +173,14 @@ def _stream_worker(
                 status.consecutive_errors += 1
                 logger.warning(
                     "Camera %s: frame read failed (%d consecutive).",
-                    camera_id, status.consecutive_errors,
+                    camera_id,
+                    status.consecutive_errors,
                 )
                 if status.consecutive_errors >= max_errors:
                     logger.error(
                         "Camera %s: %d consecutive frame errors — reconnecting.",
-                        camera_id, status.consecutive_errors,
+                        camera_id,
+                        status.consecutive_errors,
                     )
                     break  # break inner loop → outer loop will reconnect
 
@@ -290,7 +299,9 @@ def _stream_worker(
         status.reconnect_attempts += 1
         logger.info(
             "Camera %s: reconnecting in %.1fs (attempt %d)",
-            camera_id, backoff_s, status.reconnect_attempts,
+            camera_id,
+            backoff_s,
+            status.reconnect_attempts,
         )
         _interruptible_sleep(backoff_s, stop_event)
         backoff_s = min(backoff_s * 2, max_backoff)
@@ -299,7 +310,8 @@ def _stream_worker(
     status.state = StreamState.stopped
     logger.info(
         "Camera %s: stream thread stopped (frames_processed=%d)",
-        camera_id, status.frames_processed,
+        camera_id,
+        status.frames_processed,
     )
 
 
@@ -318,6 +330,7 @@ def _interruptible_sleep(seconds: float, stop_event: threading.Event) -> None:
 
 # ── Manager ───────────────────────────────────────────────────────────────────
 
+
 class CameraStreamManager:
     """Process-singleton manager for all camera stream threads.
 
@@ -330,9 +343,9 @@ class CameraStreamManager:
 
     def __init__(self) -> None:
         self._lock: threading.Lock = threading.Lock()
-        self._threads: dict[int, threading.Thread]       = {}
-        self._stop_events: dict[int, threading.Event]    = {}
-        self._statuses: dict[int, StreamStatus]          = {}
+        self._threads: dict[int, threading.Thread] = {}
+        self._stop_events: dict[int, threading.Event] = {}
+        self._statuses: dict[int, StreamStatus] = {}
 
     @classmethod
     def get(cls) -> CameraStreamManager:
@@ -370,7 +383,9 @@ class CameraStreamManager:
             self._threads[camera_id] = thread
 
         thread.start()
-        logger.info("Camera %s: stream thread launched (org=%s url=%s)", camera_id, org_id, stream_url)
+        logger.info(
+            "Camera %s: stream thread launched (org=%s url=%s)", camera_id, org_id, stream_url
+        )
         return True
 
     def stop_camera(self, camera_id: int, timeout_s: float = 5.0) -> bool:
@@ -391,7 +406,8 @@ class CameraStreamManager:
         if thread.is_alive():
             logger.warning(
                 "Camera %s: thread did not stop within %.1fs — it will die when the process exits.",
-                camera_id, timeout_s,
+                camera_id,
+                timeout_s,
             )
         else:
             logger.info("Camera %s: stream thread stopped cleanly.", camera_id)

@@ -1,11 +1,14 @@
 """Tests for notifications inbox."""
+
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app.models import Notification, NotificationChannel, NotificationStatus
 
 
-def _seed_notification(db: Session, org_id: int, user_id: int, is_read: bool = False) -> Notification:
+def _seed_notification(
+    db: Session, org_id: int, user_id: int, is_read: bool = False
+) -> Notification:
     n = Notification(
         organization_id=org_id,
         user_id=user_id,

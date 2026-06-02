@@ -97,7 +97,9 @@ def create_app() -> FastAPI:
         elapsed_ms = round((time.perf_counter() - start) * 1000, 1)
         response.headers["X-Response-Time-Ms"] = str(elapsed_ms)
         if elapsed_ms > 2000:
-            logger.warning("Slow request: %s %s → %dms", request.method, request.url.path, elapsed_ms)
+            logger.warning(
+                "Slow request: %s %s → %dms", request.method, request.url.path, elapsed_ms
+            )
         return response
 
     # meta routes

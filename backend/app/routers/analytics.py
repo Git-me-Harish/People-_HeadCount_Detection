@@ -33,18 +33,8 @@ def summary(
 
     base = db.query(DetectionRecord).filter(*base_filter)
     total = base.count()
-    peak = (
-        db.query(func.max(DetectionRecord.person_count))
-        .filter(*base_filter)
-        .scalar()
-        or 0
-    )
-    avg = (
-        db.query(func.avg(DetectionRecord.person_count))
-        .filter(*base_filter)
-        .scalar()
-        or 0
-    )
+    peak = db.query(func.max(DetectionRecord.person_count)).filter(*base_filter).scalar() or 0
+    avg = db.query(func.avg(DetectionRecord.person_count)).filter(*base_filter).scalar() or 0
     latest_q = db.query(DetectionRecord).filter(
         DetectionRecord.organization_id == user.organization_id,
     )

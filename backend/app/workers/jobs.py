@@ -67,6 +67,7 @@ def is_cancellable(job_id: int) -> bool:
 
 # Worker:
 
+
 def run_video_job(job_id: int) -> None:
     """Background task: process a video job end-to-end."""
     db = SessionLocal()

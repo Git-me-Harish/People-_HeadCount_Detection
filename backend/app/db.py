@@ -26,7 +26,7 @@ def _make_engine():
         # as_posix() produces forward-slash paths that sqlite3 on Windows can't open
         # when the directory doesn't exist yet. We resolve via pathlib and mkdir first.
         if db_url.startswith("sqlite:///"):
-            db_path_str = db_url[len("sqlite:///"):]
+            db_path_str = db_url[len("sqlite:///") :]
             db_path = Path(db_path_str)
             db_path.parent.mkdir(parents=True, exist_ok=True)
 

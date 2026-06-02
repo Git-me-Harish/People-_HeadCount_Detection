@@ -50,6 +50,7 @@ class APITokenRead(BaseModel):
 
 class APITokenCreated(APITokenRead):
     """Returned only on creation — includes the plaintext full_token once."""
+
     full_token: str
 
 
@@ -105,10 +106,14 @@ def revoke_token(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ) -> None:
-    token = db.query(APIToken).filter(
-        APIToken.id == token_id,
-        APIToken.organization_id == user.organization_id,
-    ).first()
+    token = (
+        db.query(APIToken)
+        .filter(
+            APIToken.id == token_id,
+            APIToken.organization_id == user.organization_id,
+        )
+        .first()
+    )
     if token is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Token not found")
     db.delete(token)
