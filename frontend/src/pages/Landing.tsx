@@ -10,10 +10,10 @@
  * Memorable element: the live-animating dashboard mock in the hero that
  * actually looks like the real app.
  */
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Activity, AlertTriangle, ArrowRight, BarChart2, Bell,
+  Activity, AlertTriangle, ArrowRight, BarChart2,
   Camera, CheckCircle2, ChevronRight, Globe, Moon, Radio,
   Shield, Sun, TrendingUp, Users, Zap,
 } from "lucide-react";

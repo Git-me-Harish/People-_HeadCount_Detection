@@ -7,10 +7,6 @@ interface ImportMetaEnv {
   readonly VITE_API_URL: string;
 }
 
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
-
 export const APP_NAME = "PeopleSense" as const;
 export const APP_TAGLINE = "Crowd Intelligence for Safer Public Spaces" as const;
 

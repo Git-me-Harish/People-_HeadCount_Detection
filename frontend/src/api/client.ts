@@ -11,6 +11,7 @@ import type {
   CameraCreate,
   CameraStreamStatus,
   DetectionRecord,
+  DetectionResult,       
   HeatmapSnapshot,
   IndustryTemplate,
   Job,
@@ -31,6 +32,7 @@ export type {
   Camera,
   Job,
   DetectionRecord,
+  DetectionResult,
 };
 
 // ── Instance ───────────────────────────────────────────────────────────[...]
