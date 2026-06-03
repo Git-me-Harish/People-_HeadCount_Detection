@@ -12,18 +12,6 @@ import { ROUTES, VERTICALS } from "../constants";
 import type { IndustryTemplate } from "../types";
 import { useAsync } from "../hooks";
 
-// Vertical icons — SVG text alternatives, no emojis
-const VERTICAL_ICONS: Record<string, React.ReactNode> = {
-  religious:  <span className="text-base font-bold" style={{ color: "var(--accent)" }}>T</span>,
-  transit:    <span className="text-base font-bold" style={{ color: "var(--accent)" }}>Tr</span>,
-  retail:     <span className="text-base font-bold" style={{ color: "var(--accent)" }}>Rt</span>,
-  hospital:   <span className="text-base font-bold" style={{ color: "var(--accent)" }}>H</span>,
-  education:  <span className="text-base font-bold" style={{ color: "var(--accent)" }}>Ed</span>,
-  stadium:    <span className="text-base font-bold" style={{ color: "var(--accent)" }}>St</span>,
-  workplace:  <span className="text-base font-bold" style={{ color: "var(--accent)" }}>Wp</span>,
-  tourism:    <span className="text-base font-bold" style={{ color: "var(--accent)" }}>Mu</span>,
-};
-
 export default function Onboarding() {
   const { t } = useTranslation();
   const navigate = useNavigate();

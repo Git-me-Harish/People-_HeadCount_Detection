@@ -1,13 +1,13 @@
 """add cooldown_minutes to alerts and max_capacity to cameras
 
 Revision ID: 001_cooldown_capacity
-Revises: 
+Revises:
 Create Date: 2025-01-01 00:00:00.000000
 """
 from __future__ import annotations
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "001_cooldown_capacity"
 down_revision = None

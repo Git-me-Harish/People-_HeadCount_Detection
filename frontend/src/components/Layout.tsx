@@ -36,7 +36,7 @@ interface NavItem {
 }
 
 function useNavItems(unreadCount: number): NavItem[] {
-  const { t } = useTranslation();
+  const { t: _t } = useTranslation();
   return [
     { to: ROUTES.DASHBOARD,     icon: <Activity size={16} />,     labelKey: "dashboard",     group: "monitor" },
     { to: ROUTES.CAMERAS,       icon: <Camera size={16} />,       labelKey: "cameras",       group: "monitor" },

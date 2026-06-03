@@ -1,20 +1,9 @@
-/**
- * Application-wide constants.
- * All magic values live here — never inline in components.
- */
-
-interface ImportMetaEnv {
-  readonly VITE_API_URL: string;
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
+// Application-wide constants.All magic values live here — never inline in components.
 
 export const APP_NAME = "PeopleSense" as const;
 export const APP_TAGLINE = "Crowd Intelligence for Safer Public Spaces" as const;
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
+export const API_BASE_URL = (import.meta as unknown as { env: Record<string, string> }).env.VITE_API_URL ?? "http://localhost:8000/api/v1";
 
 export const ROUTES = {
   HOME: "/",
@@ -44,8 +33,6 @@ export const PLAN_TIERS = {
 } as const;
 
 export const ALERT_COOLDOWN_MINUTES = 5;
-export const WS_RECONNECT_DELAY_MS = 3_000;
-export const WS_MAX_RECONNECT_ATTEMPTS = 5;
 
 /** Density thresholds for colour coding (people per camera feed). */
 export const DENSITY_THRESHOLDS = {

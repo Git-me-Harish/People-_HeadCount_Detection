@@ -111,9 +111,7 @@ def get_my_public_page(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ) -> PublicPageRead | None:
-    page = db.query(PublicPage).filter(
-        PublicPage.organization_id == user.organization_id
-    ).first()
+    page = db.query(PublicPage).filter(PublicPage.organization_id == user.organization_id).first()
     return _page_to_read(page) if page else None
 
 
@@ -123,9 +121,7 @@ def update_my_public_page(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ) -> PublicPageRead:
-    page = db.query(PublicPage).filter(
-        PublicPage.organization_id == user.organization_id
-    ).first()
+    page = db.query(PublicPage).filter(PublicPage.organization_id == user.organization_id).first()
     if page is None:
         raise HTTPException(status_code=404, detail="Public page not found")
     page.title = payload.title
@@ -146,9 +142,9 @@ def update_my_public_page(
 @router.get("/{slug}", response_model=PublicStatusResponse)
 def get_public_status(slug: str, db: Session = Depends(get_db)) -> PublicStatusResponse:
     """Unauthenticated endpoint — returns live crowd counts for a public page."""
-    page = db.query(PublicPage).filter(
-        PublicPage.slug == slug, PublicPage.is_active.is_(True)
-    ).first()
+    page = (
+        db.query(PublicPage).filter(PublicPage.slug == slug, PublicPage.is_active.is_(True)).first()
+    )
     if page is None:
         raise HTTPException(status_code=404, detail="Public page not found or inactive")
 

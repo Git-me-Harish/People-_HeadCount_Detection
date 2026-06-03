@@ -2,8 +2,8 @@
  * Custom React hooks — data fetching, polling, notifications.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { NOTIFICATION_POLL_INTERVAL_MS, WS_MAX_RECONNECT_ATTEMPTS, WS_RECONNECT_DELAY_MS } from "../constants";
+import { useCallback, useEffect, useState } from "react";
+import { NOTIFICATION_POLL_INTERVAL_MS } from "../constants";
 import { notificationsApi } from "../api/client";
 import { useAuthStore } from "../auth/store";
 
@@ -49,7 +49,7 @@ export function useAsync<T>(
   return { data, loading, error, refetch: fetch };
 }
 
-// ── Polling hook ──────────────────────────────────────────────────────────────
+// ── Polling hook ─────────────────────────────────────────────────────────[[...]
 
 export function usePolling<T>(
   fetcher: () => Promise<{ data: T }>,
@@ -125,7 +125,7 @@ export function useDarkMode(): [boolean, () => void] {
   return [mode === "ops", toggle];
 }
 
-// ── Local storage state ────────────────────────────────────────────────────────
+// ── Local storage state ───────────────────────────────────────────────────────[...]
 
 export function useLocalStorage<T>(key: string, initial: T): [T, (val: T) => void] {
   const [value, setValue] = useState<T>(() => {
@@ -148,7 +148,7 @@ export function useLocalStorage<T>(key: string, initial: T): [T, (val: T) => voi
   return [value, set];
 }
 
-// ── Debounce ───────────────────────────────────────────────────────────────────
+// ── Debounce ──────────────────────────────────────────────────────────[[...]
 
 export function useDebounce<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);

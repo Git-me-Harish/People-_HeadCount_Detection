@@ -29,4 +29,5 @@ def test_apply_template(client: TestClient, auth_headers: dict) -> None:
 
 def test_apply_unknown_template(client: TestClient, auth_headers: dict) -> None:
     resp = client.post("/api/v1/templates/nonexistent/apply", headers=auth_headers)
-    assert resp.status_code == 422  # Vertical enum validation
+    # Vertical enum validation
+    assert resp.status_code == 422

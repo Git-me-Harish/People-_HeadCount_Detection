@@ -34,9 +34,11 @@ def get_latest_heatmap(
     user: User = Depends(get_current_user),
 ) -> HeatmapResponse:
     """Return the most recent heatmap snapshot for a camera."""
-    cam = db.query(Camera).filter(
-        Camera.id == camera_id, Camera.organization_id == user.organization_id
-    ).first()
+    cam = (
+        db.query(Camera)
+        .filter(Camera.id == camera_id, Camera.organization_id == user.organization_id)
+        .first()
+    )
     if cam is None:
         raise HTTPException(status_code=404, detail="Camera not found")
 
@@ -72,9 +74,11 @@ def get_heatmap_history(
     user: User = Depends(get_current_user),
 ) -> list[HeatmapResponse]:
     """Return hourly heatmap snapshots for the last N hours."""
-    cam = db.query(Camera).filter(
-        Camera.id == camera_id, Camera.organization_id == user.organization_id
-    ).first()
+    cam = (
+        db.query(Camera)
+        .filter(Camera.id == camera_id, Camera.organization_id == user.organization_id)
+        .first()
+    )
     if cam is None:
         raise HTTPException(status_code=404, detail="Camera not found")
 

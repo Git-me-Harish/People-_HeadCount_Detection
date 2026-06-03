@@ -13,9 +13,12 @@ from fastapi import (
     File,
     Form,
     HTTPException,
+    Request,
     UploadFile,
     status,
 )
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
 from ..config import get_settings
@@ -28,10 +31,16 @@ from ..services.alerts import evaluate_alerts
 from ..services.anomaly import check_anomaly
 from ..services.detector import get_detector
 from ..services.heatmap import update_heatmap
-from ..services.notifier import NotificationChannel, dispatch as notifier_dispatch
+from ..services.notifier import NotificationChannel
+from ..services.notifier import dispatch as notifier_dispatch
 from ..workers.jobs import run_video_job
 
 router = APIRouter(prefix="/detect", tags=["detect"])
+
+# Rate limiter — keyed by remote IP.
+# Limits: image = 30/min (fast, sync), video = 5/min (async but expensive on disk + CPU).
+# Override via RATELIMIT_IMAGE / RATELIMIT_VIDEO env vars if needed.
+_limiter = Limiter(key_func=get_remote_address)
 
 ALLOWED_IMAGE = {"image/jpeg", "image/jpg", "image/png", "image/webp", "image/bmp"}
 ALLOWED_VIDEO = {"video/mp4", "video/quicktime", "video/x-msvideo", "video/webm"}
@@ -43,7 +52,9 @@ def _validate_size(upload: UploadFile, max_mb: int) -> None:
 
 
 @router.post("/image", response_model=DetectionResult)
+@_limiter.limit("30/minute")
 async def detect_image(
+    request: Request,  # required by slowapi — must be first positional param
     file: UploadFile = File(...),
     confidence: float | None = Form(None),
     annotate: bool = Form(True),
@@ -119,7 +130,9 @@ async def detect_image(
 
 
 @router.post("/video", response_model=JobRead, status_code=status.HTTP_202_ACCEPTED)
+@_limiter.limit("5/minute")
 async def detect_video(
+    request: Request,  # required by slowapi
     background: BackgroundTasks,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),

@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from ..db import get_db
 from ..deps import get_current_user
-from ..models import Notification, NotificationChannel, NotificationStatus, User
+from ..models import Notification, NotificationChannel, User
 
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
@@ -119,10 +119,14 @@ def delete_notification(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ) -> None:
-    notif = db.query(Notification).filter(
-        Notification.id == notification_id,
-        Notification.organization_id == user.organization_id,
-    ).first()
+    notif = (
+        db.query(Notification)
+        .filter(
+            Notification.id == notification_id,
+            Notification.organization_id == user.organization_id,
+        )
+        .first()
+    )
     if notif is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found")
     db.delete(notif)

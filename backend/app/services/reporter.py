@@ -9,7 +9,6 @@ from __future__ import annotations
 import io
 import logging
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -33,7 +32,17 @@ def _try_import_reportlab():
             TableStyle,
         )
 
-        return colors, A4, getSampleStyleSheet, cm, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+        return (
+            colors,
+            A4,
+            getSampleStyleSheet,
+            cm,
+            Paragraph,
+            SimpleDocTemplate,
+            Spacer,
+            Table,
+            TableStyle,
+        )
     except ImportError:
         return None
 
@@ -54,7 +63,9 @@ def generate_summary_pdf(
         logger.warning("reportlab not installed — PDF generation skipped")
         return None
 
-    colors, A4, getSampleStyleSheet, cm, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle = rl
+    colors, A4, getSampleStyleSheet, cm, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle = (
+        rl
+    )
 
     since = datetime.now(timezone.utc) - timedelta(days=days)
 
@@ -142,7 +153,12 @@ def generate_summary_pdf(
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
-                    ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f5f3ff")]),
+                    (
+                        "ROWBACKGROUNDS",
+                        (0, 1),
+                        (-1, -1),
+                        [colors.white, colors.HexColor("#f5f3ff")],
+                    ),
                 ]
             )
         )

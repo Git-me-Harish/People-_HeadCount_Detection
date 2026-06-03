@@ -2,16 +2,9 @@ import { useState } from "react";
 import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { notificationsApi } from "../api/client";
-import { Button, Card, EmptyState, PageHeader, Spinner, Badge } from "../components/ui";
+import { Button, Card, EmptyState, PageHeader, Spinner } from "../components/ui";
 import { useAsync } from "../hooks";
 import type { Notification } from "../types";
-
-const TYPE_COLORS: Record<string, string> = {
-  alert:   "red",
-  info:    "accent",
-  system:  "gray",
-  warning: "yellow",
-};
 
 export default function Notifications() {
   const [unreadOnly, setUnreadOnly] = useState(false);
@@ -113,9 +106,6 @@ export default function Notifications() {
                     <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
                       {n.title}
                     </p>
-                    {n.type && (
-                      <Badge color={TYPE_COLORS[n.type] ?? "gray"}>{n.type}</Badge>
-                    )}
                   </div>
                   <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                     {n.body}
