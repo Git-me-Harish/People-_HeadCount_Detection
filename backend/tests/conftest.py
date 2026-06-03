@@ -116,6 +116,7 @@ def test_user(client: TestClient, db: _Session) -> _User:
     assert user is not None
     return user
 
+
 @pytest.fixture
 def authenticated_user(client: TestClient, db: _Session):
     """
@@ -147,7 +148,5 @@ def authenticated_user(client: TestClient, db: _Session):
 
     return {
         "user": user,
-        "headers": {
-            "Authorization": f"Bearer {token}"
-        },
+        "headers": {"Authorization": f"Bearer {token}"},
     }

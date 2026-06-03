@@ -121,9 +121,7 @@ function Particles({ dark }: { dark: boolean }) {
 function DashboardMock({ dark }: { dark: boolean }) {
   const bg     = dark ? "#0d1420" : "#ffffff";
   const border = dark ? "#1e2a3d" : "#e8eaef";
-  const divider= dark ? "#1a2436" : "#f0f1f4";
   const label  = dark ? "#4a5c78" : "#9aa5b4";
-  const text   = dark ? "#e8edf5" : "#0d1117";
 
   const bars = [42, 68, 55, 80, 61, 93, 74, 58, 82, 67, 91, 76];
   const [active, setActive] = useState(11);

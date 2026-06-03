@@ -6,13 +6,6 @@ import { Button, Card, EmptyState, PageHeader, Spinner } from "../components/ui"
 import { useAsync } from "../hooks";
 import type { Notification } from "../types";
 
-const TYPE_COLORS: Record<string, string> = {
-  alert:   "red",
-  info:    "accent",
-  system:  "gray",
-  warning: "yellow",
-};
-
 export default function Notifications() {
   const [unreadOnly, setUnreadOnly] = useState(false);
   const { data, loading, refetch } = useAsync(

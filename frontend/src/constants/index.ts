@@ -1,16 +1,9 @@
-/**
- * Application-wide constants.
- * All magic values live here — never inline in components.
- */
-
-interface ImportMetaEnv {
-  readonly VITE_API_URL: string;
-}
+// Application-wide constants.All magic values live here — never inline in components.
 
 export const APP_NAME = "PeopleSense" as const;
 export const APP_TAGLINE = "Crowd Intelligence for Safer Public Spaces" as const;
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api/v1";
+export const API_BASE_URL = (import.meta as unknown as { env: Record<string, string> }).env.VITE_API_URL ?? "http://localhost:8000/api/v1";
 
 export const ROUTES = {
   HOME: "/",
