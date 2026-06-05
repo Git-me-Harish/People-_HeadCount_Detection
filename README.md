@@ -1,7 +1,7 @@
 # PeopleSense Cloud
 
 > Multi-tenant crowd intelligence SaaS — real-time head-count detection, predictive analytics, and public transparency for safer public spaces.
-> Additions have been made that is on the Subscription Model and Payment Integration
+> Additions have been made that is on the Subscription Model and Payment Integration.
 
 ---
 
